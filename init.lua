@@ -121,6 +121,8 @@ end)
 -- Enable break indent
 vim.opt.breakindent = true
 
+vim.o.linebreak = true
+
 -- Save undo history
 vim.opt.undofile = true
 
