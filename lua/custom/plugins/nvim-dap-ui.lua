@@ -11,7 +11,7 @@ return {
       {
         elements = { 'scopes', 'breakpoints', 'stacks' },
         position = 'left',
-        size = 30,
+        size = 60,
       },
       {
         elements = { 'console', 'repl' },
