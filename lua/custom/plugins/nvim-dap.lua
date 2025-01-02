@@ -13,9 +13,37 @@ return {
     {
       '<leader>db',
       function()
-        require('dap').list_breakpoints()
+        local dap = require 'dap'
+        -- Clear and Close the REPL buffer
+        dap.repl.clear()
+        -- Ensure the REPL is open before appending data
+        dap.repl.open()
+
+        local build_command = 'cmake --build ./build --target vrhri'
+        local build_job = vim.fn.jobstart(build_command, {
+          stdout_buffered = false,
+          stderr_buffered = false,
+          on_stdout = function(_, data)
+            if data then
+              for _, line in ipairs(data) do
+                dap.repl.append(line)
+              end
+            end
+          end,
+          on_stderr = function(_, data)
+            if data then
+              for _, line in ipairs(data) do
+                dap.repl.append('[stderr] ' .. line)
+              end
+            end
+          end,
+        })
+
+        if build_job <= 0 then
+          print 'Failed to start build job.'
+        end
       end,
-      desc = 'DAP Breakpoints',
+      desc = 'DAP Build',
     },
     {
       '<leader>dw',
