@@ -53,6 +53,13 @@ return {
       desc = 'DAP Build',
     },
     {
+      '<leader>dc',
+      function()
+        run_task 'clean_target'
+      end,
+      desc = 'DAP Clean',
+    },
+    {
       '<leader>dw',
       function()
         local widgets = require 'dap.ui.widgets'
