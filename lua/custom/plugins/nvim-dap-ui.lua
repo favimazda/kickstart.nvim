@@ -9,14 +9,21 @@ return {
     },
     layouts = {
       {
-        elements = { 'scopes', 'breakpoints', 'stacks' },
         position = 'left',
-        size = 60,
+        size = 50,
+        elements = {
+          { id = 'scopes', size = 0.5 },
+          { id = 'statcks', size = 0.3 },
+          { id = 'breakpoints', size = 0.2 },
+        },
       },
       {
-        elements = { 'console', 'repl' },
-        position = 'bottom',
-        size = 15,
+        position = 'right',
+        size = 50,
+        elements = {
+          { id = 'console', size = 0.8 },
+          { id = 'repl', size = 0.2 },
+        },
       },
     },
     expand_lines = false,
