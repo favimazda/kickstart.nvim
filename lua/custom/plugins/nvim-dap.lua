@@ -1,41 +1,41 @@
--- My sub routines:
-local function run_build()
-  local dap = require 'dap'
+-- My subroutines
+local function run_task(task_label)
+  local overseer = require 'overseer'
+  overseer.setup {
+    task_list = {
+      direction = 'bottom',
+      min_height = 10,
+      max_height = 80,
+      default_detail = 1,
+    },
+  }
 
-  -- Clear and Close the REPL buffer
-  dap.repl.clear()
-
-  -- Ensure the REPL is open before appending data
-  dap.repl.open()
-
-  local build_command = 'cmake --build ./build --target vrhri'
-
-  local build_job = vim.fn.jobstart(build_command, {
-    stdout_buffered = false,
-    stderr_buffered = false,
-    on_stdout = function(_, data)
-      if data then
-        for _, line in ipairs(data) do
-          dap.repl.append(line)
-        end
-      end
-    end,
-    on_stderr = function(_, data)
-      if data then
-        for _, line in ipairs(data) do
-          dap.repl.append('[stderr] ' .. line)
-        end
-      end
-    end,
-  })
-
-  if build_job <= 0 then
-    print 'Failed to start build job.'
+  -- Stop and remove any existing tasks to avoid buffer conflicts
+  local tasks = overseer.list_tasks { name = task_label }
+  for _, task in ipairs(tasks) do
+    if task:is_running() then
+      task:stop()
+    end
+    overseer.close(task) -- Close the task output buffer
   end
+
+  -- Fetch all tasks matching the label
+  overseer.run_template({ name = task_label }, function(task)
+    if not task then
+      print('Task not found: ' .. task_label)
+      return
+    end
+
+    -- Start the task and capture output
+    task:start()
+
+    vim.defer_fn(function()
+      overseer.open { task = task, focus = true }
+    end, 500)
+  end)
 end
 -- You can add your own plugins here or in other files in this directory!
 --  I promise not to create any merge conflicts in this directory :)
---
 -- See the kickstart.nvim README for more information
 return {
   'mfussenegger/nvim-dap',
@@ -48,7 +48,7 @@ return {
     {
       '<leader>db',
       function()
-        run_build()
+        run_task 'build'
       end,
       desc = 'DAP Build',
     },
