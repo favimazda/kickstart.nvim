@@ -1,3 +1,38 @@
+-- My sub routines:
+local function run_build()
+  local dap = require 'dap'
+
+  -- Clear and Close the REPL buffer
+  dap.repl.clear()
+
+  -- Ensure the REPL is open before appending data
+  dap.repl.open()
+
+  local build_command = 'cmake --build ./build --target vrhri'
+
+  local build_job = vim.fn.jobstart(build_command, {
+    stdout_buffered = false,
+    stderr_buffered = false,
+    on_stdout = function(_, data)
+      if data then
+        for _, line in ipairs(data) do
+          dap.repl.append(line)
+        end
+      end
+    end,
+    on_stderr = function(_, data)
+      if data then
+        for _, line in ipairs(data) do
+          dap.repl.append('[stderr] ' .. line)
+        end
+      end
+    end,
+  })
+
+  if build_job <= 0 then
+    print 'Failed to start build job.'
+  end
+end
 -- You can add your own plugins here or in other files in this directory!
 --  I promise not to create any merge conflicts in this directory :)
 --
@@ -13,35 +48,7 @@ return {
     {
       '<leader>db',
       function()
-        local dap = require 'dap'
-        -- Clear and Close the REPL buffer
-        dap.repl.clear()
-        -- Ensure the REPL is open before appending data
-        dap.repl.open()
-
-        local build_command = 'cmake --build ./build --target vrhri'
-        local build_job = vim.fn.jobstart(build_command, {
-          stdout_buffered = false,
-          stderr_buffered = false,
-          on_stdout = function(_, data)
-            if data then
-              for _, line in ipairs(data) do
-                dap.repl.append(line)
-              end
-            end
-          end,
-          on_stderr = function(_, data)
-            if data then
-              for _, line in ipairs(data) do
-                dap.repl.append('[stderr] ' .. line)
-              end
-            end
-          end,
-        })
-
-        if build_job <= 0 then
-          print 'Failed to start build job.'
-        end
+        run_build()
       end,
       desc = 'DAP Build',
     },
