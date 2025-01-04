@@ -409,8 +409,24 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
       vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
       vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+
+      local glob_include = { '*.c', '*.cpp', '*.h', '*.hpp', '*.lua', '*.proto' }
+      local common_opts = { cwd = vim.fn.getcwd(), glob_pattern = glob_include }
+      vim.keymap.set('n', '<leader>sw', function()
+        builtin.grep_string {
+          common_opts,
+          disable_coordinates = true,
+          additional_args = { '-w', '-s' },
+        }
+      end, { desc = '[S]earch exact current [W]ord' })
+
+      vim.keymap.set('n', '<leader>sg', function()
+        builtin.live_grep {
+          common_opts,
+          disable_coordinates = true,
+        }
+      end, { desc = '[S]earch by [G]rep' })
+
       vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
