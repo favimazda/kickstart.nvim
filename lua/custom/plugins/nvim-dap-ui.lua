@@ -21,8 +21,14 @@ return {
         position = 'right',
         size = 50,
         elements = {
-          { id = 'console', size = 0.8 },
-          { id = 'repl', size = 0.2 },
+          { id = 'console', size = 1.0 },
+        },
+      },
+      {
+        position = 'bottom',
+        size = 20,
+        elements = {
+          { id = 'repl', size = 1.0 },
         },
       },
     },
