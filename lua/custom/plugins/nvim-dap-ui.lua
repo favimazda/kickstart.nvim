@@ -9,8 +9,8 @@ return {
     },
     layouts = {
       {
-        position = 'left',
-        size = 50,
+        position = 'right',
+        size = 0.25,
         elements = {
           { id = 'scopes', size = 0.5 },
           { id = 'statcks', size = 0.3 },
@@ -19,14 +19,14 @@ return {
       },
       {
         position = 'right',
-        size = 50,
+        size = 0.25,
         elements = {
           { id = 'console', size = 1.0 },
         },
       },
       {
         position = 'bottom',
-        size = 20,
+        size = 0.2,
         elements = {
           { id = 'repl', size = 1.0 },
         },
