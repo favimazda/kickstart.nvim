@@ -126,6 +126,7 @@ return {
     --
     -- This avoid unnecessary jumps
     require('dap').defaults.fallback.switchbuf = 'usevisible,usetab,newtab'
+    require('dap').defaults.fallback.exception_breakpoints = {}
 
     -- Adapters
     -- C, C++, Rust
